@@ -1,23 +1,30 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    private string msg;
-    private StringBuilder sb = new StringBuilder(1200);
-    
+
     void Update()
     {
-        sb.Clear();
-        
-        for (int i = 0; i < 100; i++)
+        Enemy target = GetClosestEnemy();
+        if (target != null)
         {
-            sb.Append("Message ").Append(i).Append("\n");
-            //msg += $"Message {i}\n";
+            transform.LookAt(target.transform.position);
         }
+    }
 
-        Debug.Log(sb);
+    private Enemy GetClosestEnemy()
+    {
+        // GC
+        Collider[] enemies = Physics.OverlapSphere(transform.position, 10.0f, 1 << 8);
+
+        // GC
+        var enemiesList = enemies.OrderBy(enemy => Vector3.Distance(transform.position, enemy.transform.position))
+            .ToList();
+        
+        return (enemiesList.Count > 0) ? enemiesList[0].GetComponent<Enemy>() : null;
     }
 }
