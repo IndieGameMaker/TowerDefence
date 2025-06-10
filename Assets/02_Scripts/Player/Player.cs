@@ -7,7 +7,18 @@ using UnityEngine.Profiling;
 
 public class Player : MonoBehaviour
 {
-
+    private WaitForSeconds ws = new WaitForSeconds(0.2f);
+    
+    IEnumerator Attack()
+    {
+        while (true)
+        {
+            yield return ws;
+            // 공격 로직
+            Debug.Log("Attack");
+        }
+    }
+    
     void Update()
     {
         Profiler.BeginSample("가까운 적찾는 로직");
@@ -23,7 +34,7 @@ public class Player : MonoBehaviour
 
     private Collider[] buffer = new Collider[50];
     
-    private Enemy GetClosestEnemy()
+    Enemy GetClosestEnemy()
     {
         // GC
         //Collider[] enemies = Physics.OverlapSphere(transform.position, 10.0f, 1 << 8);
