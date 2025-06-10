@@ -3,16 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 public class Player : MonoBehaviour
 {
 
     void Update()
     {
+        Profiler.BeginSample("가까운 적찾는 로직");
         Enemy target = GetClosestEnemy();
+        Profiler.EndSample();        
+        
         if (target != null)
         {
             transform.LookAt(target.transform.position);
+            target.TakeDamage(100);
         }
     }
 
@@ -26,7 +31,7 @@ public class Player : MonoBehaviour
         //var enemiesList = enemies.OrderBy(enemy => Vector3.Distance(transform.position, enemy.transform.position)).ToList();
         //return (enemiesList.Count > 0) ? enemiesList[0].GetComponent<Enemy>() : null;
 
-        int count = Physics.OverlapSphereNonAlloc(transform.position, 10.0f, buffer, 1 << 8);
+        int count = Physics.OverlapSphereNonAlloc(transform.position, 15.0f, buffer, 1 << 8);
 
         if (count == 0) return null;
 
